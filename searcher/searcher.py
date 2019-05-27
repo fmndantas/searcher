@@ -17,7 +17,7 @@ def get_modules(path, ext=''):
 def get_functions(module):
     pass
 
-def dsearch(name, path, dresults):
+def dsearch(name, path, dresults=[]):
     subpackages = get_subpackages(path)  # getting subpackages in current path
     if subpackages:  # if there are any subpackages
         for subpackage in subpackages:  # for all subpackages
@@ -26,7 +26,7 @@ def dsearch(name, path, dresults):
             dsearch(name, os.path.join(path, subpackage), dresults)  # run recursive dsearch for current subpackage
     return dresults  # after all dsearch executions, return results with all possible matches for name
 
-def msearch(name, path, mresults):
+def msearch(name, path, mresults=[]):
     modules = get_modules(path, __EXT__)
     to_dirs = get_subpackages(path)
     if modules:
@@ -55,14 +55,10 @@ def all_functions(package):
 
 def search(name, package):
     path = get_pack_dir(package.__file__)
-    sresults, mresults= [], []  # subpackages, methods, funtions
-    sresults = dsearch(name, path, sresults)
-    mresults = msearch(name, path, mresults)
+    sresults = dsearch(name, path)
+    mresults = msearch(name, path)
     for pos, sresult in enumerate(sresults):
         sresults[pos] = format_result(package.__name__.split('.')[0], sresult, mode='subpackage')
     for pos, mresult in enumerate(mresults):
         mresults[pos] = format_result(package.__name__.split('.')[0], mresult, mode='module')
     return sresults, mresults
-
-if __name__ == '__main__':
-    pass
