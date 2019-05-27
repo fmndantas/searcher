@@ -55,6 +55,7 @@ def all_functions(package):
 
 def search(name, package):
     """Finds possible occurrences inside some package
+
     Parameters
     ----------
     name: 'thing' to find inside package
@@ -64,6 +65,15 @@ def search(name, package):
     -------
     sresults: all subpackages in which name appears
     mresults: all modules (.py files) in which name appears
+
+    Example of usage
+    ----------------
+    import numpy
+    from searcher import searcher
+    sresults, _ = searcher.search('matrix', numpy)
+
+    # Outputs
+    sresults = 'numpy.matrixlib'
     """
     path = get_pack_dir(package.__file__)
     sresults = dsearch(name, path)
