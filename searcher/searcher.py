@@ -54,6 +54,17 @@ def all_functions(package):
         return None
 
 def search(name, package):
+    """Finds possible occurrences inside some package
+    Parameters
+    ----------
+    name: 'thing' to find inside package
+    package: name of package that's object of the searching
+
+    Returns
+    -------
+    sresults: all subpackages in which name appears
+    mresults: all modules (.py files) in which name appears
+    """
     path = get_pack_dir(package.__file__)
     sresults = dsearch(name, path)
     mresults = msearch(name, path)
