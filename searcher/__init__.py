@@ -1,1 +1,0 @@
-from searcher.searcher import *

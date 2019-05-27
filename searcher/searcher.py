@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import pdb
 
 __EXT__ = 'py'
 
@@ -11,13 +12,13 @@ def get_subpackages(path):
 
 def get_modules(path, ext=''):
     files = [file for file in os.listdir(path) if os.path.isfile(os.path.join(path, file))]
-    filtered_files = list(filter(lambda file: file.split('.')[-1] == ext, files))
+    filtered_files = list(filter(lambda file: file.split('.')[-1] in ext, files))
     return list(map(lambda file: file.split('.')[0], filtered_files))
     
 def get_functions(module):
     pass
 
-def dsearch(name, path, dresults=[]):
+def dsearch(name, path, dresults):
     subpackages = get_subpackages(path)  # getting subpackages in current path
     if subpackages:  # if there are any subpackages
         for subpackage in subpackages:  # for all subpackages
@@ -26,7 +27,7 @@ def dsearch(name, path, dresults=[]):
             dsearch(name, os.path.join(path, subpackage), dresults)  # run recursive dsearch for current subpackage
     return dresults  # after all dsearch executions, return results with all possible matches for name
 
-def msearch(name, path, mresults=[]):
+def msearch(name, path, mresults):
     modules = get_modules(path, __EXT__)
     to_dirs = get_subpackages(path)
     if modules:
@@ -75,11 +76,14 @@ def search(name, package):
     # Outputs
     sresults = 'numpy.matrixlib'
     """
+    sresults, mresults = [], []
     path = get_pack_dir(package.__file__)
-    sresults = dsearch(name, path)
-    mresults = msearch(name, path)
-    for pos, sresult in enumerate(sresults):
-        sresults[pos] = format_result(package.__name__.split('.')[0], sresult, mode='subpackage')
-    for pos, mresult in enumerate(mresults):
-        mresults[pos] = format_result(package.__name__.split('.')[0], mresult, mode='module')
+    sresults = dsearch(name, path, sresults)
+    mresults = msearch(name, path, mresults)
+    if sresults:
+        for pos, sresult in enumerate(sresults):
+            sresults[pos] = format_result(package.__name__.split('.')[0], sresult, mode='subpackage')
+    if mresults:
+        for pos, mresult in enumerate(mresults):
+            mresults[pos] = format_result(package.__name__.split('.')[0], mresult, mode='module')
     return sresults, mresults
