@@ -20,11 +20,12 @@
 *.tar
 *.zip
 *.idea/
-*__pycache__/
+*__pycache__*
 *.dwl
 *.dwl2
 *.bak
 *.dwg
+*.egg-info
 
 # Logs and databases #
 ######################
